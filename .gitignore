@@ -105,3 +105,11 @@ venv.bak/
 
 # GIS files
 *.hdf
+*.dbf
+*.prj
+*.sbn
+*.sbx
+*.shp
+*.xml
+*.shx
+*.sql

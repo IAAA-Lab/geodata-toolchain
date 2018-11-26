@@ -51,9 +51,8 @@ class Extraction():
         """ This function gets an shp file and inserts it to db """
 
         # Generate sql file
-        cmd = 'shp2pgsql -s 4269 -g geom_4269 -I -W "latin1" {} "{}" > {}.sql'.format(params, file_name, params)
+        cmd = 'shp2pgsql -s 4269 -g geom_4269 -I -W \"latin1\" {} \"{}\" > {}.sql'.format(params, file_name, file_name)
         subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell=True)
-        cmd.stdout.close()
 
         # Insert into PostgreSQL/Postgis db
         file = open(file_name + '.sql', "r")
@@ -67,6 +66,7 @@ class Extraction():
         os.remove(file_name + ".sql")
 
     def insertGeoPackage(self, file_name, db):
+        """ This function gets a GeoPackage files and inserts it into db """
         pass
 
     def getHDF(self, file_name, db):
