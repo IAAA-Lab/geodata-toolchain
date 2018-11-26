@@ -13,16 +13,23 @@ class DB():
         self.db = db
         self.table = table
 
-    def execQuery(self, sql_query):
-        # Connect with db
+    def connectDB(self):
+         # Connect with db
         try:
             self.conn = psycopg2.connect(host=self.host, port=self.port, database=self.db, user=self.user, password=self.password)
         except:
             print('Error trying to connect to {} on {}'.format(self.db, self.user + ':' + self.password + '@' + self.host + ':' + self.port))
 
+    def execQuery(self, sql_query):       
         # Execute query
         cur = self.conn.cursor()
         cur.execute(sql_query)
+        
+        if cur.description == None:
+            return None
+        else:
+            return cur.fetchall()        
 
+    def closeDB(self):
         # Close connection with DB
-        cur.close()
+        self.conn.cursor().close()

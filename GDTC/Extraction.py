@@ -12,7 +12,7 @@ from subprocess import call
 
 class Extraction():
 
-    def insertHDF(self, file_name, layer_num, db):
+    def insertHDF(self, file_name, layer_num, db, params):
         """ This functions gets a layer from an hdf file and inserts it to db """
 
         # Load file
@@ -32,15 +32,53 @@ class Extraction():
         out = None
 
         # Generate sql file
-        cmd = 'raster2pgsql -I -C -a -s 4326 ' + layer_path + ' -F ' + db.table + ' > ' + file_name + '.sql'
+        cmd = 'raster2pgsql -I -C -a -s 4326 {} -F {} {} > {}.sql'.format(layer_path, db.table, params, file_name)
         subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell=True)
 
         # Insert into PostgreSQL/Postgis db
         file = open(file_name + '.sql', "r")
+
+        db.connectDB()
         db.execQuery(file.read())
+        db.closeDB()
         file.close()
 
         # Clean temp files
         os.remove(file_name + '.tif')
         os.remove(file_name + ".sql")
+
+    def insertSHP(self, file_name, db, params):
+        """ This function gets an shp file and inserts it to db """
+
+        # Generate sql file
+        cmd = 'shp2pgsql -s 4269 -g geom_4269 -I -W "latin1" {} "{}" > {}.sql'.format(params, file_name, params)
+        subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell=True)
+        cmd.stdout.close()
+
+        # Insert into PostgreSQL/Postgis db
+        file = open(file_name + '.sql', "r")
+        
+        db.connectDB()
+        db.execQuery(file.read())
+        db.closeDB()
+        file.close()
+        
+        # Clean temp files
+        os.remove(file_name + ".sql")
+
+    def insertGeoPackage(self, file_name, db):
+        pass
+
+    def getHDF(self, file_name, db):
+        """ This function gets an hdf file from db """
+
+        # Query
+        query = "SELECT * FROM \"{}\" WHERE filename='{}'".format(db.table, file_name)
+
+        # Get from DB
+        db.connectDB()
+        hdfFile = db.execQuery(query)
+        db.closeDB()
+
+        return hdfFile
         
