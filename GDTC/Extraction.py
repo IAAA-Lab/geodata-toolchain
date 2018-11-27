@@ -32,7 +32,7 @@ class Extraction():
         out = None
 
         # Generate sql file
-        cmd = 'raster2pgsql -I -C -a -s 4326 {} -F {} {} > {}.sql'.format(layer_path, db.table, params, file_name)
+        cmd = 'raster2pgsql -I -C -s 4326 {} -F {} {} > {}.sql'.format(layer_path, db.table, params, file_name)
         subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell=True)
 
         # Insert into PostgreSQL/Postgis db

@@ -112,4 +112,7 @@ venv.bak/
 *.shp
 *.xml
 *.shx
+
+#Otros
 *.sql
+*.txt
