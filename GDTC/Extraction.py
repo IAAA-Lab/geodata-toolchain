@@ -9,11 +9,13 @@ import os
 import subprocess
 import psycopg2
 from subprocess import call
+from GDTC.Pipe import Pipe
 
-class Extraction():
-
-    def insertHDF(self, file_name, layer_num, db, params):
-        """ This functions gets a layer from an hdf file and inserts it to db """
+class Extraction:
+    
+    @classmethod
+    def insertHDF(cls, file_name, layer_num, params, pipe):
+        """ This functions gets a layer from an hdf file and inserts it to db indicated in pipe"""
 
         # Load file
         hdf = gdal.Open(file_name, gdal.GA_ReadOnly)
@@ -32,22 +34,25 @@ class Extraction():
         out = None
 
         # Generate sql file
-        cmd = 'raster2pgsql -I -C -s 4326 {} -F {} {} > {}.sql'.format(layer_path, db.table, params, file_name)
+        cmd = 'raster2pgsql -I -C -s 4326 {} -F {} {} > {}.sql'.format(layer_path, pipe.getDB_src().table, params, file_name)
         subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell=True)
 
         # Insert into PostgreSQL/Postgis db
         file = open(file_name + '.sql', "r")
 
-        db.connectDB()
-        db.execQuery(file.read())
-        db.closeDB()
+        pipe.getDB_src().connectDB()
+        pipe.getDB_src().execQuery(file.read())
+        pipe.getDB_src().closeDB()
         file.close()
 
         # Clean temp files
         os.remove(file_name + '.tif')
         os.remove(file_name + ".sql")
 
-    def insertSHP(self, file_name, db, params):
+        return pipe
+
+    @classmethod
+    def insertSHP(cls, file_name, params, pipe):
         """ This function gets an shp file and inserts it to db """
 
         # Generate sql file
@@ -57,28 +62,33 @@ class Extraction():
         # Insert into PostgreSQL/Postgis db
         file = open(file_name + '.sql', "r")
         
-        db.connectDB()
-        db.execQuery(file.read())
-        db.closeDB()
+        pipe.getDB_src().connectDB()
+        pipe.getDB_src().execQuery(file.read())
+        pipe.getDB_src().closeDB()
         file.close()
         
         # Clean temp files
         os.remove(file_name + ".sql")
 
-    def insertGeoPackage(self, file_name, db):
-        """ This function gets a GeoPackage files and inserts it into db """
-        pass
+        return pipe
 
-    def getHDF(self, file_name, db):
+    @classmethod
+    def insertGeoPackage(cls, file_name, pipe):
+        """ This function gets a GeoPackage files and inserts it into db """
+        return pipe
+
+    @classmethod
+    def getHDF(cls, file_name, pipe):
         """ This function gets an hdf file from db """
 
         # Query
-        query = "SELECT * FROM \"{}\" WHERE filename='{}'".format(db.table, file_name)
+        query = "SELECT * FROM \"{}\" WHERE filename='{}'".format(pipe.getDB_src.table, file_name)
 
         # Get from DB
-        db.connectDB()
-        hdfFile = db.execQuery(query)
-        db.closeDB()
+        pipe.getDB_src().connectDB()
+        hdfFile = pipe.getDB_src().execQuery(query)
+        pipe.setResult(hdfFile)
+        pipe.getDB_src().closeDB()
 
-        return hdfFile
+        return pipe
         

@@ -10,13 +10,16 @@ import subprocess
 import psycopg2
 from subprocess import call
 
-class Transformation():
+class Transformation:
     
-    def convertSHP2HDF(self, file_name, db_src, db_dst):
-        pass
-    
-    def mergeHDFwithHDF(self, file_name1, file_name2, db_src, db_dst):
-        pass
+    @classmethod
+    def convertSHP2HDF(cls, file_name, pipe):
+        return pipe
 
-    def clipHDFwithSHP(self, hdf_file_name, shp_file_name, db_src, db_dst):
-        pass
+    @classmethod
+    def mergeHDFwithHDF(cls, file_name1, file_name2, pipe):
+        return pipe
+
+    @classmethod
+    def clipHDFwithSHP(cls, hdf_file_name, shp_file_name, pipe):
+        return pipe
