@@ -4,23 +4,30 @@
 
 from GDTC.DB import DB
 from GDTC.Pipe import Pipe
-from GDTC.Extraction import Extraction as e
-from GDTC.Transformation import Transformation as t
-from GDTC.Load import Load as l
+import GDTC.Filters.input as i
+from GDTC.Stage import Stage
 
-# Define variables
+# Define DB
 db = DB('127.0.0.1', '8432', 'postgres', 'geodatatoolchainps', 'postgres', 'geo-rasters')
-pipe = Pipe(db)
-layers = [0, 1, 2, 5, 7]
 
-# Insert layers from HDF file
-for layer in layers:
-    pipe = e.insertHDF('MCD12Q1.A2006001.h17v04.006.2018054121935.hdf', layer,'', pipe)
+# First approach of functional style workflow
+# It's not possible to instpect this because lamda functions has no name or docstring
 
-# Workflow
-pipe = e.insertSHP('Comunidades_Autonomas_ETRS89_30N', '', pipe)
-pipe = e.getHDF('MCD12Q1.A2006001.h17v04.006.2018054121935.hdf.tif', pipe)
+s1 = Stage(db)
+s1.add(lambda: i.insertHDF('', 'MCD12Q1.A2006001.h17v04.006.2018054121935.hdf', 1,''))\
+  .add(lambda: i.insertSHP('', 'Comunidades_Autonomas_ETRS89_30N'))\
+  .add(lambda: i.insertSHP('', 'Comunidades_Autonomas_ETRS89_30N'))\
+  .inspect()\
+  .run()
 
-pipe = t.clipHDFwithSHP('file_name1', 'file_name2', pipe)
+# Second approach of functional style workflow
+# This approach is better because it lets the inspection of the function and it's
+# easier to hide the use of pipes. It's also easier for the user beacuse there's no
+# need to use lambda functions
 
-pipe = l.loadHDF(pipe)
+s2 = Stage(db)
+s2.add(i.insertHDF, 'MCD12Q1.A2006001.h17v04.006.2018054121935.hdf', 1)\
+  .add(i.insertSHP, 'Comunidades_Autonomas_ETRS89_30N')\
+  .add(i.insertSHP, 'Comunidades_Autonomas_ETRS89_30N')\
+  .inspect()\
+  .run()
