@@ -38,6 +38,6 @@ class Stage:
         """ This function runs the complete stage """
 
         for f in self.to_run:
-            f['function'](pipe=self.pipe, *f['args'])
+            f['function'](self.pipe, *f['args'])
 
         
