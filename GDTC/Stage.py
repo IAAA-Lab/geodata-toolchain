@@ -9,12 +9,12 @@ class Stage:
 
     def __init__(self, db):
         self.pipe = Pipe(db)
-        self.to_run_funct = []
+        self.to_run = []
 
     def add(self, f, *args):
         """ This functions adds a filter to the stage """
         
-        self.to_run_funct.append({'function': f, 'args': args})
+        self.to_run.append({'function': f, 'args': args})
         return self
 
     def inspect(self):
@@ -25,7 +25,7 @@ class Stage:
         print('\nInspection for object: {}:\n'.format(self))
         print('Functions to run:\n')
 
-        for f in self.to_run_funct:
+        for f in self.to_run:
             print('<< {} >>'.format(i))
             print('Function: {}'.format(f['function'].__name__))
             print('Description: {}'.format(f['function'].__doc__))
@@ -37,7 +37,7 @@ class Stage:
     def run(self):
         """ This function runs the complete stage """
 
-        for f in self.to_run_funct:
+        for f in self.to_run:
             f['function'](pipe=self.pipe, *f['args'])
 
         
