@@ -15,6 +15,8 @@ class Pipe():
         self.password = password
         self.db = db
         self.table = table
+        self.error = False
+        self.result = None
 
     def connectDB(self):
 

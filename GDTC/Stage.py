@@ -53,6 +53,15 @@ class Stage:
 
         for f in self.to_run:
             self.pipe = f['function'](self.pipe, *f['args']) # pipe = f(pipe, args)
-            self.to_run = self.to_run[:len(self.to_run)-1]
+            
+            item = {'id': f['id']}
+
+            if(self.pipe.error == False):
+                self.to_run = self.to_run[1:len(self.to_run)]
+                if item in self.errors:
+                    self.errors = self.errors.remove(item)
+            else:
+                self.errors.append(item)
+                self.errors.remove(self.errors.pop)
 
         return self
