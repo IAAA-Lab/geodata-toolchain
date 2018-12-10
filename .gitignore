@@ -113,6 +113,10 @@ venv.bak/
 *.xml
 *.shx
 
-#Otros
+# Other
 *.sql
 *.txt
+
+# Other Folders
+sandbox/
+.vscode/
