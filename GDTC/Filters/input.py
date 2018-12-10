@@ -12,7 +12,7 @@ from subprocess import call
 from GDTC.Pipe import Pipe
 
 
-def insertHDF(pipe, file_name, layer_num, *params):
+def insertHDF(pipe, file_name, layer_num, coord_sys, *params):
     """ This functions gets a layer from an hdf file and inserts it to db indicated in pipe"""
 
     # Load file
@@ -32,15 +32,15 @@ def insertHDF(pipe, file_name, layer_num, *params):
     out = None
 
     # Generate sql file
-    cmd = 'raster2pgsql -I -C -s 4326 {} -F {} {} > {}.sql'.format(layer_path, pipe.getDB_src().table, params, file_name)
+    cmd = 'raster2pgsql -I -C -s {} {} -F {} {} > {}.sql'.format(coord_sys, layer_path, pipe.table, params, file_name)
     subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell=True)
 
     # Insert into PostgreSQL/Postgis db
     file = open(file_name + '.sql', "r")
 
-    pipe.getDB_src().connectDB()
-    pipe.getDB_src().execQuery(file.read())
-    pipe.getDB_src().closeDB()
+    pipe.connectDB()
+    pipe.execQuery(file.read())
+    pipe.closeDB()
     file.close()
 
     # Clean temp files
@@ -59,9 +59,9 @@ def insertSHP(pipe, file_name, *params):
     # Insert into PostgreSQL/Postgis db
     file = open(file_name + '.sql', "r")
     
-    pipe.getDB_src().connectDB()
-    pipe.getDB_src().execQuery(file.read())
-    pipe.getDB_src().closeDB()
+    pipe.connectDB()
+    pipe.execQuery(file.read())
+    pipe.closeDB()
     file.close()
     
     # Clean temp files

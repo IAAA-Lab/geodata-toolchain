@@ -8,8 +8,8 @@ import asyncio
 class Stage:
     """ This class lets the user define diferent stages on its workflow """
 
-    def __init__(self, db):
-        self.pipe = Pipe(db)
+    def __init__(self, pipe):
+        self.pipe = pipe
         self.to_run = []
         self.exec_log = []
         self.errors = []
@@ -49,7 +49,7 @@ class Stage:
         """ This function runs the complete stage """
 
         for f in self.to_run:
-            self.pipe = f['function'](self.pipe, *f['args'])
+            self.pipe = f['function'](self.pipe, *f['args']) # pipe = f(pipe, args)
             self.to_run = self.to_run[:len(self.to_run)-1]
 
         return self

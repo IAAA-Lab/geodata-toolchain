@@ -1,37 +1,35 @@
-import time
+# Author: Víctor Fernández Melic
+# Project: IAAA GeoData Toolchain
 
-class Pipe:
+import psycopg2
 
-    def __init__(self, db_src):
-        self.db_src = db_src
-        self.init_timestamp = time.time()
-        self.last_timestamp = self.init_timestamp
-        self.state = 0
-        self.result = None
+class Pipe():
 
-    def updateTimestamp(self):
-        self.last_timestamp = time.time()
+    def __init__(self, host, port, user, password, db, table):
+        self.host = host
+        self.port = port
+        self.user = user
+        self.password = password
+        self.db = db
+        self.table = table
 
-    def setDB_src(self, db_src):
-        self.db_src = db_src
-        self.updateTimestamp()
+    def connectDB(self):
+         # Connect with db
+        try:
+            self.conn = psycopg2.connect(host=self.host, port=self.port, database=self.db, user=self.user, password=self.password)
+        except:
+            print('Error trying to connect to {} on {}'.format(self.db, self.user + ':' + self.password + '@' + self.host + ':' + self.port))
 
-    def setDB_dst(self, db_dst):
-        self.db_dst = db_dst
-        self.updateTimestamp()
+    def execQuery(self, sql_query):       
+        # Execute query
+        cur = self.conn.cursor()
+        cur.execute(sql_query)
+        
+        if cur.description == None:
+            return None
+        else:
+            return cur.fetchall()        
 
-    def setResult(self, result):
-        self.result = result
-        self.updateTimestamp()
-
-    def getResult(self):
-        self.updateTimestamp()
-        return self.result
-
-    def getDB_src(self):
-        self.updateTimestamp()
-        return self.db_src
-
-    def getDB_dst(self):
-        self.updateTimestamp()
-        return self.db_dst
+    def closeDB(self):
+        # Close connection with DB
+        self.conn.cursor().close()

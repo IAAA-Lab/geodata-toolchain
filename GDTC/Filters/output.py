@@ -14,6 +14,13 @@ from GDTC.Pipe import Pipe
 def loadHDF(pipe, file_name, *params):
     """ This function loads an HDF file into the pipe """
     
-    print('loadDHF: Mock execution correct')
+    print('loadHDF: Mock execution correct')
+
+    return pipe
+
+def loadSHP(pipe, file_name, *params):
+    """ This function loads an HDF file into the pipe """
+    
+    print('loadSHP: Mock execution correct')
 
     return pipe
