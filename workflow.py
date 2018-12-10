@@ -1,12 +1,13 @@
 # Author: Víctor Fernández Melic
 # Project: IAAA GeoData Toolchain
 # Module: Workflow
+# Description: This module is where the user can define a complete workflow composed by one or many filters.
 
 from GDTC.Pipe import Pipe
 import GDTC.Filters.input as i
 import GDTC.Filters.output as o
 from GDTC.Stage import Stage
-from GDTC.Decorators import run
+from GDTC.decorators import run
 
 # Define initial Pipe
 pipe = Pipe('127.0.0.1', '8432', 'postgres', 'geodatatoolchainps', 'postgres', 'geo-rasters')

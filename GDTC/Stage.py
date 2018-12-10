@@ -1,6 +1,9 @@
 # Author: Víctor Fernández Melic
 # Project: IAAA GeoData Toolchain
 # Module: Stage
+# Decription: This class is an abstraction to encapsulate a single bunch of filters to execute.
+#             It lets the user define a task or step on it’s workflow. The user can inspect the
+#             filters added to the stage and run them sequentially or concurrently. 
 
 from GDTC.Pipe import Pipe
 import asyncio

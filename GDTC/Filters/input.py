@@ -1,6 +1,8 @@
 # Author: Víctor Fernández Melic
 # Project: IAAA GeoData Toolchain
-# Module: Filter.Input
+# Module: Input Filters
+# Description: This module encapsulates the input filters.
+#              That means: Any filter related with inserting information into the Working DB
 
 from osgeo import gdal
 from osgeo import ogr
@@ -72,3 +74,4 @@ def insertSHP(pipe, file_name, *params):
 def insertGeoPackage(pipe, file_name, *params):
     """ This function gets a GeoPackage files and inserts it into db """
     return pipe
+    
