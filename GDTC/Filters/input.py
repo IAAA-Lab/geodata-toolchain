@@ -34,16 +34,14 @@ def insertHDF(pipe, file_name, layer_num, coord_sys, *params):
     out = None
 
     # Generate sql file
-    cmd = 'raster2pgsql -I -C -s {} {} -F {} {} > {}.sql'.format(coord_sys, layer_path, pipe.table, params, file_name)
+    cmd = 'raster2pgsql -I -C -s {} {} -F {} {} > {}.sql'.format(coord_sys, layer_path, pipe.table, *params, file_name)
     subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell=True)
 
     # Insert into PostgreSQL/Postgis db
-    file = open(file_name + '.sql', "r")
-
-    pipe.connectDB()
-    pipe.execQuery(file.read())
-    pipe.closeDB()
-    file.close()
+    with open(file_name + '.sql', "r") as file:
+        pipe.connectDB()
+        pipe.execQuery(file.read())
+        pipe.closeDB()
 
     # Clean temp files
     os.remove(file_name + '.tif')
@@ -59,12 +57,10 @@ def insertSHP(pipe, file_name, *params):
     subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell=True)
 
     # Insert into PostgreSQL/Postgis db
-    file = open(file_name + '.sql', "r")
-    
-    pipe.connectDB()
-    pipe.execQuery(file.read())
-    pipe.closeDB()
-    file.close()
+    with open(file_name + '.sql', "r") as file:    
+        pipe.connectDB()
+        pipe.execQuery(file.read())
+        pipe.closeDB()
     
     # Clean temp files
     os.remove(file_name + ".sql")
