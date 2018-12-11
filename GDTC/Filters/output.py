@@ -14,7 +14,8 @@ from GDTC.Pipe import Pipe
 def loadHDF(pipe, file_name, *params):
     """ This function loads an HDFfile from working db into the exploitation db specified in the pipe """
     
-    print('loadHDF: Mock execution correct')
+    pipe.error = True
+    print('loadHDF: Mock execution incorrect')
 
     return pipe
 

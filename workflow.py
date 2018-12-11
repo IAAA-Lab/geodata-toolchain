@@ -32,4 +32,5 @@ s2.configure('concurrent')\
   .add(o.loadHDF, 'Comunidades_Autonomas_ETRS89_30N')\
   .add(o.loadHDF, 'Comunidades_Autonomas_ETRS89_30N')\
   .inspect()\
-  .run()
+  .run()\
+  .inspect()
