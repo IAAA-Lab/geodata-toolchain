@@ -21,7 +21,7 @@ class PostgresTarget(luigi.Target):
     """
     marker_table = luigi.configuration.get_config().get('postgres', 'marker-table', 'table_updates')
 
-    # if not supplied, fall back to default Postgres port
+    # If not supplied, fall back to default Postgres port
     DEFAULT_DB_PORT = 5432
 
     # Use DB side timestamps or client side timestamps in the marker_table
@@ -53,7 +53,6 @@ class PostgresTarget(luigi.Target):
         """
         Create marker table if it doesn't exist.
 
-        Using a separate connection since the transaction might have to be reset.
         """
         if self.connection == None:
             self.connect()
@@ -77,9 +76,6 @@ class PostgresTarget(luigi.Target):
         """
         Mark this update as complete.
 
-        Important: If the marker table doesn't exist, the connection transaction will be aborted
-        and the connection reset.
-        Then the marker table will be created.
         """
         self.create_marker_table()
 
@@ -110,6 +106,10 @@ class PostgresTarget(luigi.Target):
         raise NotImplementedError("Cannot open() PostgresTarget")
     
     def exists(self, connection=None):
+        """
+        Check if the output is created and so the task is completed
+        """
+        
         if connection is None:
             self.connect().connection.autocommit = True
             
@@ -124,7 +124,7 @@ class PostgresTarget(luigi.Target):
 
     def executeQuery(self, sql: str):
         """
-        Execute query with the connection oppened previously
+        Execute query with the connection oppened previously and update marker_table
         """
         with self.connection.cursor() as cur:
             cur.execute(sql)
