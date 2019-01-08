@@ -117,6 +117,7 @@ venv.bak/
 *.sql
 *.txt
 *.old
+*.ipynb
 
 # Other Folders
 sandbox/
