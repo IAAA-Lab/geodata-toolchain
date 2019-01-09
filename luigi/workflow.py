@@ -14,7 +14,7 @@ class insertHDF(luigi.Task):
         pass
 
     def output(self):
-        db = Db('127.0.0.1', '8432', 'postgres', 'geodatatoolchainps', 'postgres', 'test', '9')
+        db = Db('127.0.0.1', '8432', 'postgres', 'geodatatoolchainps', 'postgres', 'test', '14')
         return PostgresTarget(db)
     
     def run(self):

@@ -79,13 +79,12 @@ class PostgresTarget(luigi.Target):
         """
         self.create_marker_table()
 
-        with self.connection.cursor() as cur:
-            cur.execute(
-                """INSERT INTO {marker_table} (update_id, target_table, inserted)
-                         VALUES (%s, %s, %s);
-                    """.format(marker_table=self.marker_table),
+        with self.connection.cursor() as cur:            
+            cur.execute("""UPDATE {marker_table} SET update_id=%s, target_table=%s, inserted=%s WHERE update_id = (SELECT update_id FROM table_updates ORDER BY inserted desc limit 1);
+            """.format(marker_table=self.marker_table),
                 (self.update_id, self.table,
-                 datetime.datetime.now()))
+                datetime.datetime.now()))
+        
 
     def connect(self):
         """
