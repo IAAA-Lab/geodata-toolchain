@@ -60,14 +60,18 @@ class PostgresTarget(luigi.Target):
         self.connection.autocommit = True
 
         with self.connection.cursor() as cur:
-            sql = """ CREATE TABLE {marker_table} (
+            create_sql = """ CREATE TABLE {marker_table} (
                     update_id TEXT PRIMARY KEY,
                     target_table TEXT,
                     inserted TIMESTAMP);
                 """.format(marker_table=self.marker_table)
 
+            insert_sql = """ INSERT INTO {marker_table} (update_id, target_table) VALUES ('1', '1'););
+                """.format(marker_table=self.marker_table)
+
             try:
-                cur.execute(sql)
+                cur.execute(create_sql)
+                cur.execute(insert_sql)
             except psycopg2.ProgrammingError as e:
                 if e.pgcode == psycopg2.errorcodes.DUPLICATE_TABLE:
                     pass
@@ -84,6 +88,9 @@ class PostgresTarget(luigi.Target):
             """.format(marker_table=self.marker_table),
                 (self.update_id, self.table,
                 datetime.datetime.now()))
+            
+            self.connection.commit()
+            
         
 
     def connect(self):
@@ -114,7 +121,7 @@ class PostgresTarget(luigi.Target):
             
         with self.connection.cursor() as cursor:
             try:
-                cursor.execute("""SELECT * FROM {} WHERE update_id={} LIMIT 1""".format(self.marker_table, self.update_id))
+                cursor.execute("""SELECT * FROM {} WHERE update_id='{}' LIMIT 1""".format(self.marker_table, self.update_id))
                 row = cursor.fetchone()
                 return row is not None
             except:
@@ -128,7 +135,7 @@ class PostgresTarget(luigi.Target):
         with self.connection.cursor() as cur:
             cur.execute(sql)
             self.connection.commit()
-            self.result = cur.fetchall()
+            #self.result = cur.fetchall()
 
             self.touch()
 

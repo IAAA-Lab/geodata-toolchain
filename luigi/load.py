@@ -1,5 +1,5 @@
 import luigi
-from conversion import HDF2TIF
+from conversion import HDF2TIF, TIF2SQL
 from PostgresTarget import PostgresTarget
 from DB import Db
 from osgeo import gdal
@@ -18,15 +18,24 @@ class insertHDF(luigi.Task):
 
     task_namespace = 'load'
     file_name = luigi.Parameter()
+    extra_params = luigi.Parameter()
+    
+    db = Db('127.0.0.1', '8432', 'postgres', 'geodatatoolchainps', 'postgres', 'geo-rasters2', '2')
 
     def requires(self):
-        # Requires file in tif format
-        return HDF2TIF(file_name=self.file_name, layer_num=1)
+        pass
 
     def output(self):
-        db = Db('127.0.0.1', '8432', 'postgres', 'geodatatoolchainps', 'postgres', 'test', '14')
-        return PostgresTarget(db)
+        return PostgresTarget(self.db)
     
     def run(self):
-        sql = """SELECT * FROM table_updates;"""
-        print(self.output().connect().executeQuery(sql).result)
+        # Requires file in tif format
+        luigi.build([HDF2TIF(file_name=self.file_name, layer_num=1)], local_scheduler=True)
+        
+        # Requires sql query to insert file
+        luigi.build([TIF2SQL(file_name=self.file_name, coord_sys=4326, db=self.db, layer_path='./{}.tif'.format(self.file_name), extra_params=self.extra_params)], local_scheduler=True)
+        
+        # Insert into PostgreSQL/Postgis db
+        with open(self.file_name + '.sql', "r") as file:
+            sql = file.read()
+            self.output().connect().executeQuery(sql)
