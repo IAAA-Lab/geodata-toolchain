@@ -52,7 +52,6 @@ class TIF2SQL(luigi.Task):
     layer_path = luigi.Parameter()
     coord_sys = luigi.Parameter()
     db = luigi.Parameter()
-    extra_params = luigi.Parameter()
 
     def requires(self):
         return TIF(self.file_name)
@@ -62,5 +61,5 @@ class TIF2SQL(luigi.Task):
     
     def run(self):
         # Generate sql file
-        cmd = 'raster2pgsql -I -C -s {} {} -F {} {} > {}.sql'.format(self.coord_sys, self.layer_path, self.db.table, *self.extra_params, self.file_name)
+        cmd = 'raster2pgsql -I -C -s {} {} -F -d {} > {}.sql'.format(self.coord_sys, self.layer_path, self.db.table, self.file_name)
         subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell=True)
