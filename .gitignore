@@ -118,6 +118,7 @@ venv.bak/
 *.txt
 *.old
 *.ipynb
+*.tif
 
 # Other Folders
 sandbox/
