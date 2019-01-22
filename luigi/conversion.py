@@ -10,6 +10,8 @@ import subprocess
 import psycopg2
 from subprocess import call
 
+from DBParameter import DBParameter
+
 class HDF2TIF(luigi.Task):
     """
     Generates tif file from hdf layer
@@ -51,7 +53,7 @@ class TIF2SQL(luigi.Task):
     file_name = luigi.Parameter()
     layer_path = luigi.Parameter()
     coord_sys = luigi.Parameter()
-    db = luigi.Parameter()
+    db = DBParameter()
 
     def requires(self):
         return TIF(self.file_name)

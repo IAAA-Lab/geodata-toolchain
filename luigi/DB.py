@@ -16,3 +16,6 @@ class Db():
         self.database = database
         self.table = table
         self.update_id = update_id
+
+    def __str__(self):
+        return "BD object(%s,%s,%s,%s,%s,%s,%s)"%(self.host, self.port, self.user, self.password, self.database, self.table, self.update_id)

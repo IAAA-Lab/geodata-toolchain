@@ -66,7 +66,7 @@ class PostgresTarget(luigi.Target):
                     inserted TIMESTAMP);
                 """.format(marker_table=self.marker_table)
 
-            insert_sql = """ INSERT INTO {marker_table} (update_id, target_table) VALUES ('1', '1'););
+            insert_sql = """ INSERT INTO {marker_table} (update_id, target_table) VALUES ('1', '1');
                 """.format(marker_table=self.marker_table)
 
             try:
