@@ -5,7 +5,7 @@ from DB import Db
 # Workflow example
 
 # Final db
-db = Db('127.0.0.1', '8432', 'postgres', 'geodatatoolchainps', 'postgres', 'geo-rasters', '7')
+db = Db('127.0.0.1', '8432', 'postgres', 'geodatatoolchainps', 'postgres', 'geo-rasters', '2')
 
 # Build and run workflow
 if __name__ == '__main__':
