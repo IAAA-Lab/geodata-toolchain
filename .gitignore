@@ -123,5 +123,4 @@ venv.bak/
 # Other Folders
 sandbox/
 .vscode/
-GDTC/
 tmp/

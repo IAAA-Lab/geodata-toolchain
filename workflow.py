@@ -1,12 +1,12 @@
 import luigi
 
-from gdtc_extension.gdtc_core.insert_hdf import insertHDF
-from gdtc_extension.gdtc_base.db import Db
+from gdtc.gdtc_core.insert_hdf import insertHDF
+from gdtc.gdtc_base.db import Db
 
 # Workflow example
 
 # Final db
-db = Db('127.0.0.1', '8432', 'postgres', 'geodatatoolchainps', 'postgres', 'geo-rasters', '5')
+db = Db('127.0.0.1', '8432', 'postgres', 'geodatatoolchainps', 'postgres', 'geo-rasters', '6')
 
 # Build and run workflow
 if __name__ == '__main__':
