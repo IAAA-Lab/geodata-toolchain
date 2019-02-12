@@ -1,7 +1,7 @@
 import logging
 import datetime
 import luigi
-from DB import Db
+from ..gdtc_base.db import Db
 
 logger = logging.getLogger('luigi-interface')
 

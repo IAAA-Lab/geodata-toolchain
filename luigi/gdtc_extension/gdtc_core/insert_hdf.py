@@ -1,19 +1,24 @@
 import luigi
-from conversion import HDF2TIF, TIF2SQL
-from load import execSQL
-from documents import SQL
-from PostgresTarget import PostgresTarget
-from DB import Db
-from osgeo import gdal
-from osgeo import ogr
+
 import numpy
 import os
 import subprocess
 import psycopg2
+
+from osgeo import gdal
+from osgeo import ogr
+
 from subprocess import call
-from DBParameter import DBParameter
-from config import Config
-from gdtc_base_tasks.config_env import ConfigEnv
+
+from ..conversion.hdf2tif import HDF2TIF
+from ..conversion.tif2sql import TIF2SQL
+from ..load.exec_sql import execSQL
+from ..documents.sql import SQL
+from ..targets.postgres_target import PostgresTarget
+from ..gdtc_base.db import Db
+from ..parameters.db_parameter import DBParameter
+from ..gdtc_base.config import Config
+from ..gdtc_base.config_env import ConfigEnv
 
 class insertHDF(luigi.Task):
     task_namespace = 'gdtc'
@@ -39,7 +44,4 @@ class insertHDF(luigi.Task):
                       db=self.db)
 
     def complete(self):
-        if self.output().exists():
-            return True
-
-        return False
+        return self.output().exists()

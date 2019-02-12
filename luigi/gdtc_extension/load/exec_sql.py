@@ -1,17 +1,21 @@
 import luigi
-from conversion import HDF2TIF, TIF2SQL
-from documents import SQL
-from PostgresTarget import PostgresTarget
-from DB import Db
-from osgeo import gdal
-from osgeo import ogr
+
 import numpy
 import os
 import subprocess
 import psycopg2
-from subprocess import call
 
-from DBParameter import DBParameter
+from ..conversion.hdf2tif import  HDF2TIF
+from ..conversion.tif2sql import TIF2SQL
+from ..documents.sql import SQL
+from ..targets.postgres_target import PostgresTarget
+from ..gdtc_base.db import Db
+
+from osgeo import gdal
+from osgeo import ogr
+
+from subprocess import call
+from ..parameters.db_parameter import DBParameter
 
 # Define Task for inserting HDF file into PostgreSQL DB
 class execSQL(luigi.Task):

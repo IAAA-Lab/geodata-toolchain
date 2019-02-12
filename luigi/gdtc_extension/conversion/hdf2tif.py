@@ -1,16 +1,16 @@
 import luigi
-from documents import HDF, TIF
 
-from DB import Db
-from osgeo import gdal
-from osgeo import ogr
 import numpy
 import os
-import subprocess
 import psycopg2
-from subprocess import call
 
-from DBParameter import DBParameter
+from osgeo import gdal
+from osgeo import ogr
+
+from ..documents.hdf import HDF
+from ..documents.tif import TIF
+from ..gdtc_base.db import Db
+from ..parameters.db_parameter import DBParameter
 
 class HDF2TIF(luigi.Task):
     """
@@ -43,25 +43,3 @@ class HDF2TIF(luigi.Task):
         
         # Write file to disk
         out = None
-
-class TIF2SQL(luigi.Task):
-    """
-    Generates sql query to insert into postgis db from tif file
-    """
-    task_namespace = 'document'
-
-    file_name = luigi.Parameter()
-    layer_path = luigi.Parameter()
-    coord_sys = luigi.Parameter()
-    db = DBParameter()
-
-    def requires(self):
-        return TIF(self.file_name)
-
-    def output(self):
-        return luigi.LocalTarget('{file_name}.sql'.format(file_name=self.file_name))
-    
-    def run(self):
-        # Generate sql file
-        cmd = 'raster2pgsql -I -C -s {} \"{}.tif\" -F -d {} > \"{}.sql\"'.format(self.coord_sys, self.layer_path, self.db.table, self.file_name)
-        subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell=True)

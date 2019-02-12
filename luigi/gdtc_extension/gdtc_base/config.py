@@ -1,7 +1,7 @@
 import os
 import shutil
 
-basedir = os.path.abspath(os.path.dirname(__file__))
+basedir = os.path.abspath(os.path.dirname(__file__)) + '\\..\\..'
 
 class Config(object):
     LUIGI_BASE = os.environ.get('LUIGI_BASE') or basedir

@@ -5,7 +5,7 @@
 #              luigi Parameter
 
 import luigi
-from DB import Db
+from ..gdtc_base.db import Db
 
 class DBParameter(luigi.Parameter):
 
