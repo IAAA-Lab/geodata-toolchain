@@ -10,6 +10,6 @@ To solve this problem, a sequential task is required. This task is a normal task
 
 This sequential task can be used at any point of the workflow execution, including the main task and just requires a list of task to be executed. The list must contain the tasks in the order they have to be executed.
 
-![Image 3](img/3-GDTC-DS-SequentialWorkflow.png "Sequential Work Flow")
+![Image 3](img/3-GDTC-DS-SequentialWorkFlow.png "Sequential Work Flow")
 
 The problem with this approach is that the main code is executed in the run function of a luigi task, and that way of execution serializes the objects passed as parameters.
