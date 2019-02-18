@@ -19,12 +19,13 @@ from ..gdtc_base.db import Db
 from ..parameters.db_parameter import DBParameter
 from ..gdtc_base.config import Config
 from ..gdtc_base.config_env import ConfigEnv
+from ..parameters.db_parameter import DBParameter
 from ..gdtc_base.sequential_task import sequentialTask
 
 class insertHDF(luigi.Task):
     task_namespace = 'gdtc'
     file_name = luigi.Parameter()
-    db = luigi.Parameter()
+    db = DBParameter()
 
     def requires(self):
         task_list = [
