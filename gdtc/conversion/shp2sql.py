@@ -21,5 +21,5 @@ class SHP2SQL():
 
     def run(self):
         # Generate sql file
-        cmd = 'shp2pgsql -s 4269 -g geom_4269 -I -W \"latin1\" \"{file_name}\" > {file_name2}.sql'.format(file_name=self.file_name, file_name2=self.file_name)
+        cmd = 'shp2pgsql -c -s 4269 -g geom_4269 -I -W \"latin1\" \"{file_name}\" > {file_name2}.sql'.format(file_name=self.file_name, file_name2=self.file_name)
         subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell=True)
