@@ -17,15 +17,17 @@ class InsertSHP():
     Insert SHP file into postgis db
     """
 
-    def __init__(self, file_name, db, *params):
+    def __init__(self, file_name, db, coord_sys, *params):
         self.file_name = file_name
         self.db = db
+        self.coord_sys = coord_sys
         self.params = params
 
     def run(self):
         # Generate sql file
         SHP2SQL(
             self.file_name,
+            self.coord_sys,
             self.params
         ).run()
 

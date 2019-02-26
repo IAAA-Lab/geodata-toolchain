@@ -15,22 +15,31 @@ from ..gdtc_aux.db import Db
 
 class InsertHDF():
 
-    def __init__(self, file_name, coord_sys, layer, db):
+    def __init__(self, file_name, layer, db, reproyect=False, srcSRS=None, dstSRS=None, cell_res=None):
         self.file_name = file_name
-        self.coord_sys = coord_sys
         self.layer = layer
         self.db = db
+        self.reproyect = reproyect
+        self.srcSRS = srcSRS
+        self.dstSRS = dstSRS
+        self.cell_res = cell_res
 
     def run(self):
 
         HDF2TIF(
-            file_name='{file_name}'.format(file_name=self.file_name),
-            layer_num=self.layer
-        ).run() 
+            file_name = '{file_name}'.format(file_name=self.file_name),
+            layer_num = self.layer,
+            reproyect = self.reproyect,
+            srcSRS = self.srcSRS,
+            dstSRS = self.dstSRS,
+            cell_res = self.cell_res
+        ).run()
+
+        junk, coord_sys = str(self.dstSRS).split(':')
 
         TIF2SQL(
             file_name='{file_name}'.format(file_name=self.file_name),
-            coord_sys=self.coord_sys, db=self.db, layer_path='{file_name}'.format(file_name=self.file_name)
+            coord_sys=coord_sys, db=self.db, layer_path='{file_name}'.format(file_name=self.file_name)
         ).run()
 
         ExecSQL(

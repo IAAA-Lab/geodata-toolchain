@@ -17,12 +17,17 @@ class ClipHDFWithSHP():
     Insert SHP file into postgis db
     """
 
-    def __init__(self, hdf_file_name, layer, coord_sys, shp_file_name, db):
+    def __init__(self, hdf_file_name, layer, shp_coord_sys, shp_file_name, db, cell_res=None, reproyect=False, srcSRS=None, dstSRS=None, clean=False):
         self.hdf_file_name = hdf_file_name
         self.shp_file_name = shp_file_name
         self.layer = layer
-        self.coord_sys = coord_sys
+        self.shp_coord_sys = shp_coord_sys
         self.db = db
+        self.cell_res = cell_res
+        self.reproyect = reproyect
+        self.srcSRS = srcSRS
+        self.dstSRS = dstSRS
+        self.clean = clean
 
     def buildSQLQuery(self, geom, rid, gid):
         sql = '''
@@ -49,7 +54,10 @@ class ClipHDFWithSHP():
         # Insert HDF
         self.hdf_db = InsertHDF(
                         file_name=self.hdf_file_name,
-                        coord_sys=self.coord_sys,
+                        reproyect=self.reproyect,
+                        cell_res=self.cell_res,
+                        srcSRS=self.srcSRS,
+                        dstSRS=self.dstSRS,
                         layer=self.layer,
                         db=self.db
                         ).run()
@@ -57,8 +65,12 @@ class ClipHDFWithSHP():
         # Insert SHP
         self.shp_db = InsertSHP(
                         file_name=self.shp_file_name,
-                        db=self.db
+                        db=self.db,
+                        coord_sys=self.shp_coord_sys
                         ).run()
+        
+        if self.clean:
+            self.db.executeQuery(''' DROP TABLE IF EXISTS clips ''')
 
         # Clip HDF with SHP
-        self.db.executeQuery(self.buildSQLQuery('geom_4269', 1, 2))
+        self.db.executeQuery(self.buildSQLQuery('geom_{coord}'.format(coord=self.shp_coord_sys), 1, 2))
