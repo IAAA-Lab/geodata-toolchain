@@ -117,7 +117,10 @@ venv.bak/
 *.sql
 *.txt
 *.old
+*.ipynb
+*.tif
 
 # Other Folders
 sandbox/
 .vscode/
+tmp/
