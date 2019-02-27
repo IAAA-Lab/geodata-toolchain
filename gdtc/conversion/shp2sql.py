@@ -15,12 +15,12 @@ class SHP2SQL():
     Generates sql query to insert into postgis db from shp file
     """
 
-    def __init__(self, file_name, coord_sys, *params):
+    def __init__(self, file_name, table, coord_sys):
         self.file_name = file_name
+        self.table = table
         self.coord_sys = coord_sys
-        self.params = params
 
     def run(self):
         # Generate sql file
-        cmd = 'shp2pgsql -c -s {coord_sys} -g {field_name} -I -W \"latin1\" \"{file_name}\" > {file_name2}.sql'.format(coord_sys=self.coord_sys, field_name='geom_'+self.coord_sys, file_name=self.file_name, file_name2=self.file_name)
+        cmd = 'shp2pgsql -c -s {coord_sys} -g {field_name} -I -W \"latin1\" \"{file_name}\" > {file_name2}.sql'.format(coord_sys=self.coord_sys, field_name='geom_'+self.coord_sys, table=self.table, file_name=self.file_name, file_name2=self.file_name)
         subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell=True)

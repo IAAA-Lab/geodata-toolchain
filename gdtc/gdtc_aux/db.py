@@ -8,14 +8,12 @@ import psycopg2
 
 class Db():
 
-    def __init__(self, host, port, user, password, database, table, update_id):
+    def __init__(self, host, port, user, password, database):
         self.host = host
         self.port = port
         self.user = user
         self.password = password
         self.database = database
-        self.table = table
-        self.update_id = update_id
 
     def connect(self):
         """
@@ -36,6 +34,3 @@ class Db():
         with self.connect().cursor() as cur:
             cur.execute(sql)
             self.connection.commit()
-
-    def __str__(self):
-        return "BD object(%s,%s,%s,%s,%s,%s,%s)"%(self.host, self.port, self.user, self.password, self.database, self.table, self.update_id)

@@ -15,7 +15,7 @@ from subprocess import call
 # Define Task for inserting HDF file into PostgreSQL DB
 class ExecSQL():
     """
-    Inserts an HDF file into the target Db
+    Executes an SQL file into the db
     """
     def __init__(self, file_name, db):
         self.file_name = file_name

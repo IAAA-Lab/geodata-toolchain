@@ -17,21 +17,21 @@ class InsertSHP():
     Insert SHP file into postgis db
     """
 
-    def __init__(self, file_name, db, coord_sys, *params):
+    def __init__(self, file_name, db, coord_sys):
         self.file_name = file_name
+        self.table = self.file_name
         self.db = db
         self.coord_sys = coord_sys
-        self.params = params
 
     def run(self):
         # Generate sql file
         SHP2SQL(
             self.file_name,
+            self.table,
             self.coord_sys,
-            self.params
         ).run()
 
-        sql = ''' DROP TABLE IF EXISTS {table} '''.format(table=self.file_name)
+        sql = ''' DROP TABLE IF EXISTS {table} '''.format(table=self.table)
         self.db.executeQuery(sql)
 
         ExecSQL(
@@ -39,12 +39,4 @@ class InsertSHP():
             db=self.db
         ).run()
 
-        return Db(
-                host=self.db.host,
-                port=self.db.port,
-                user=self.db.user,
-                password=self.db.password,
-                database=self.db.database,
-                table=self.file_name,
-                update_id=self.db.update_id
-        )
+        return self.table

@@ -14,11 +14,13 @@ from ..load.exec_sql import ExecSQL
 from ..gdtc_aux.db import Db
 
 class InsertHDF():
+    ''' Inserts a layer of an HDF file into PostgreSQL Db. The layer can be reproyected. '''
 
-    def __init__(self, file_name, layer, db, reproyect=False, srcSRS=None, dstSRS=None, cell_res=None):
+    def __init__(self, file_name, layer, db, table='hdf_table', reproyect=False, srcSRS=None, dstSRS=None, cell_res=None):
         self.file_name = file_name
         self.layer = layer
         self.db = db
+        self.table = table
         self.reproyect = reproyect
         self.srcSRS = srcSRS
         self.dstSRS = dstSRS
@@ -39,7 +41,10 @@ class InsertHDF():
 
         TIF2SQL(
             file_name='{file_name}'.format(file_name=self.file_name),
-            coord_sys=coord_sys, db=self.db, layer_path='{file_name}'.format(file_name=self.file_name)
+            coord_sys=coord_sys,
+            db=self.db,
+            table=self.table,
+            layer_path='{file_name}'.format(file_name=self.file_name)
         ).run()
 
         ExecSQL(
@@ -47,12 +52,4 @@ class InsertHDF():
             db=self.db
         ).run()
 
-        return Db(
-            host=self.db.host,
-            port=self.db.port,
-            user=self.db.user,
-            password=self.db.password,
-            database=self.db.database,
-            table=self.db.table,
-            update_id=self.db.update_id
-        )
+        return self.table
