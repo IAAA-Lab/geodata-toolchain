@@ -17,13 +17,13 @@ class ClipHDFWithSHPDB():
     Clip HDF layer with SHP vector db
     """
 
-    def __init__(self, hdf_table, shp_table, shp_field, db, rid, gid, clean=True):
+    def __init__(self, hdf_table, shp_table, db, rid, gid, coord_sys, clean=True):
         self.hdf_table = hdf_table
         self.shp_table = shp_table
-        self.shp_field = shp_field
         self.db = db
         self.rid = rid
         self.gid = gid
+        self.coord_sys = coord_sys
         self.clean = clean
 
     def buildSQLQuery(self, geom, rid, gid):
@@ -53,4 +53,4 @@ class ClipHDFWithSHPDB():
             self.db.executeQuery(''' DROP TABLE IF EXISTS clips ''')
 
         # Clip HDF with SHP
-        self.db.executeQuery(self.buildSQLQuery('geom_{coord}'.format(coord=self.shp_field), self.rid, self.gid))
+        self.db.executeQuery(self.buildSQLQuery('geom_{coord}'.format(coord=self.coord_sys), self.rid, self.gid))
