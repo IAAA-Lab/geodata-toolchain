@@ -9,3 +9,8 @@ The idea is to be able to create a simple workflow in python to define a series 
 Username  | NIA 
 ----------|-----
 [Víctor Fernández Melic](https://github.com/Melic93) | 651943 |
+
+## Update 2019-04-03
+After using this repository to prototype several ideas and to make some tests on different branches, we have taken what we have learned and we have moved the development of this library to a new repository: <https://github.com/iaaa-lab/gdtc>.
+
+For now, we will keep this repository as a reference, but sooner or later it will be erased.
